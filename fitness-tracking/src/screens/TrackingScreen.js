@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; // For stop icon
+import { useTracking } from "../context/TrackingContext"; // Import the context
 
 const TrackingScreen = () => {
   const [tracking, setTracking] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const { addTrackingData } = useTracking(); // Access the addTrackingData function from context
 
   useEffect(() => {
     let timer;
@@ -28,6 +30,7 @@ const TrackingScreen = () => {
 
   const handleStopTracking = () => {
     setTracking(false);
+    addTrackingData(elapsedTime); // Save the elapsed time when tracking is stopped
     setModalVisible(true);
   };
 
@@ -35,10 +38,7 @@ const TrackingScreen = () => {
     <View style={styles.container}>
       {!tracking ? (
         <>
-          {/* "Tap to start recording" Text */}
           <Text style={styles.startText}>Tap to start recording</Text>
-
-          {/* Start Button */}
           <TouchableOpacity
             style={styles.startButton}
             onPress={handleStartTracking}
@@ -50,8 +50,6 @@ const TrackingScreen = () => {
         <>
           <Text style={styles.heading}>New Tracking 1</Text>
           <Text style={styles.timer}>{elapsedTime} sec</Text>
-
-          {/* Stop Button */}
           <TouchableOpacity
             style={styles.stopButton}
             onPress={handleStopTracking}
@@ -61,7 +59,6 @@ const TrackingScreen = () => {
         </>
       )}
 
-      {/* Bottom Sheet Modal */}
       <Modal
         animationType="slide"
         transparent={true}
